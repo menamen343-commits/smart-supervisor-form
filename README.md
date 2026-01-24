@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير الزيارة المعتمد - نجاة شمسان</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* === إعدادات الصفحة والطباعة === */
+        @page {
+            size: A4;
+            margin: 15mm 10mm 15mm 10mm; 
+        }
+
+        body { 
+            font-family: 'Times New Roman', serif; 
+            background: #f0f0f0; 
+            margin: 0; 
+            padding: 10px; 
+            direction: rtl;
+            scroll-behavior: smooth;
+            /* تعديل: زيادة السماكة واللون الأسود */
+            font-weight: 900; 
+            color: #000;
+        }
+        
+        .page { 
+            background: white; 
+            width: 100%;
+            max-width: 210mm; 
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            border-radius: 5px; 
+            box-sizing: border-box;
+            display: block; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* === الزر العائم الذكي === */
+        .fab-container {
+            position: fixed;
+            left: 20px;
+            bottom: 30px; 
+            z-index: 10000;
+            display: flex;
+            flex-direction: column-reverse; 
+            align-items: center;
+            gap: 10px;
+            pointer-events: none; 
+        }
+
+        .fab-main {
+            width: 50px;
+            height: 50px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            pointer-events: auto; 
+        }
+
+        .fab-main:active { transform: scale(0.9); }
+        .fab-main.active { background-color: #c0392b; transform: rotate(45deg); }
+
+        .fab-menu {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: auto; 
+        }
+
+        .fab-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .fab-item {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            color: #2c3e50;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+
+        .fab-tooltip {
+            position: absolute;
+            left: 50px; 
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            font-family: sans-serif;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .fab-item:hover .fab-tooltip { opacity: 1; }
+
+        /* === الترويسة === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .header-right p { margin: 1px 0; font-size: 11px; font-weight: 900; color: #000; }
+        .header-center { text-align: center; }
+        
+        .header-title { 
+            border: 3px solid #000; 
+            background-color: #f5f5dc !important; 
+            color: #000 !important; 
+            padding: 5px 20px; 
+            font-weight: 900; 
+            font-size: 16px; 
+            margin-top: 2px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .header-subtitle {
+            font-size: 12pt !important; 
+            font-weight: 900;
+        }
+
+        .header-left img { 
+    width: 110px !important; 
+    height: auto !important; 
+    display: block !important; 
+}
+
+        /* === العناوين === */
+        .section-header {
+            background-color: #2c3e50 !important;
+            color: #fff !important;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 4px 8px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            text-align: right;
+            -webkit-print-color-adjust: exact;
+            scroll-margin-top: 20px;
+        }
+
+        /* === الجداول === */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 5px; 
+            font-size: 12px; 
+            table-layout: fixed; 
+        }
+        tr { page-break-inside: avoid; }
+        th, td { 
+            border: 1px solid #000; 
+            text-align: center; 
+            vertical-align: middle; 
+            padding: 1px; 
+            height: 22px; 
+            overflow: hidden;
+            white-space: nowrap;
+            /* تعديل: زيادة السماكة */
+            font-weight: 900 !important; 
+            color: #000;
+        }
+        th { background-color: #e8e8e8; font-weight: 900; }
+        
+        /* === المدخلات === */
+        input[type="text"], input[type="number"], select { 
+            width: 100%; height: 100%; border: none; background: transparent; 
+            padding: 0; text-align: center; 
+            /* تعديل: زيادة السماكة واللون الأسود الحالك */
+            font-weight: 900 !important; 
+            color: #000 !important; 
+            outline: none; font-size: 12px; font-family: 'Times New Roman', serif;
+        }
+        
+        /* إجبار الأرقام والتاريخ على النسق اللاتيني */
+        input[type="number"], 
+        #visitDateMain {
+            font-family: 'Arial', sans-serif !important; 
+            direction: ltr !important; 
+            unicode-bidi: embed;
+            font-weight: 900 !important;
+        }
+
+        select { text-align-last: center; cursor: pointer; font-weight: 900; color: #000; }
+        input:focus, select:focus { background-color: #e0f7fa; }
+
+        /* معلومات علوية */
+        .info-row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .info-group { flex: 1; display: flex; align-items: center; border: 1px solid #ccc; padding: 1px 3px; background: #f9f9f9; }
+        .info-label { font-weight: 900; font-size: 12px; margin-left: 5px; white-space: nowrap; color: #000; }
+        .info-input { flex: 1; border-bottom: 1px dashed #999 !important; font-size: 12px; font-weight: 900 !important; color: #000 !important; }
+
+        /* === التوصيات والإجراءات === */
+        .rec-act-container { display: block; margin-top: 10px; scroll-margin-top: 20px; }
+        .rec-act-box {
+            width: 100%;
+            border: 1px solid #000;
+            padding: 5px;
+            min-height: 80px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .rec-act-title {
+            font-weight: 900; 
+            background: #eee; 
+            padding: 2px; 
+            border-bottom: 1px solid #000; 
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #000;
+        }
+
+        /* === الأزرار والتحكم === */
+        .action-btn { font-size: 11px; cursor: pointer; color: blue; background: none; border: 1px dashed blue; padding: 2px 5px; width: 100%; margin-top: 2px; font-weight: 900; }
+        
+        .delete-btn { 
+            color: red; font-weight: 900; cursor: pointer; border: none; background: none; font-size: 14px; 
+            width: 100%; height: 100%; display: block;
+        }
+        .tr-group:hover .delete-btn { opacity: 1; } 
+        .delete-btn { opacity: 0; transition: opacity 0.2s; }
+        
+        .ruled-input { text-align: right !important; padding-right: 5px !important; color: #000 !important; width: 95%; float: right; font-weight: 900; }
+        .counter-item { display: flex; align-items: center; margin-bottom: 2px; border-bottom: 1px dotted #ccc; clear: both; }
+
+        /* === التوقيعات === */
+        .footer-section { margin-top: 15px; border-top: 2px solid #000; padding-top: 5px; scroll-margin-top: 20px; }
+        .sig-grid { display: flex; justify-content: space-between; text-align: center; font-size: 11px; font-weight: 900; color: #000; }
+        .sig-box { width: 24%; }
+        
+        .name-input { border-bottom: 1px solid #000 !important; height: 25px !important; margin-bottom: 2px; font-weight: 900; color: #000; }
+        .sig-canvas { border: 1px dashed #333; width: 100%; height: 50px; cursor: crosshair; background: #fff; display: block; }
+        .sig-wrapper { position: relative; width: 100%; }
+        .clear-sig { position: absolute; top: 2px; left: 2px; color: red; font-size: 10px; cursor: pointer; font-weight: 900; background: rgba(255,255,255,0.8); padding: 0 4px; border-radius: 4px; }
+
+        .btn-container { text-align: center; margin-top: 20px; padding-bottom: 20px; }
+        .main-btn { background: #008080; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-family: inherit; margin: 2px; font-weight: 900; }
+        .reset-btn { background: #c0392b; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-family: inherit; margin: 2px; font-weight: 900; }
+        
+        #save-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 8px 16px; border-radius: 4px; font-size: 12px; opacity: 0; transition: opacity 0.3s; z-index: 999; font-weight: 900; }
+        #save-toast.show { opacity: 1; }
+
+        @media screen and (max-width: 600px) {
+            .page { padding: 5px; width: 100%; margin: 0; }
+            input, select, td, th { font-size: 11px; }
+            .delete-btn { opacity: 1; color: #ff0000; font-size: 16px; }
+        }
+
+        /* === إعدادات الطباعة === */
+        @media print {
+            body { background: white; margin: 0; padding: 0; color: #000 !important; }
+            
+            .page { 
+                box-shadow: none; 
+                margin: 0; 
+                border: none; 
+                width: 100%; 
+                padding: 0; 
+                page-break-after: always; 
+            }
+            
+            .no-print { display: none !important; }
+            .fab-container { display: none !important; } 
+            .section-header { -webkit-print-color-adjust: exact; }
+            .sig-canvas { border: none !important; }
+            
+            .header-title { 
+                font-size: 16pt !important; 
+                border-width: 4px !important; 
+                padding: 5px 30px !important;
+                background-color: #f5f5dc !important; 
+                color: #000 !important; 
+                -webkit-print-color-adjust: exact;
+                font-weight: 900 !important;
+            }
+            .header-subtitle {
+                font-size: 12pt !important; 
+                font-weight: 900 !important;
+            }
+
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-image: none;
+                border: none;
+                padding: 0;
+            }
+            
+            .delete-cell { display: table-cell !important; border: 1px solid #000 !important; }
+            .delete-btn { display: none !important; }
+
+            /* فرض اللون الأسود والخط الغامق في الطباعة */
+            input, select, body { color: #000 !important; font-weight: 900 !important; }
+            .rec-act-box { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="save-toast">تم الحفظ تلقائياً</div>
+
+<div class="fab-container no-print">
+    <button class="fab-main" onclick="toggleFab()">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="fab-menu" id="fabMenu">
+        <a href="#sec-sig" class="fab-item" onclick="toggleFab()">
+            <i data-lucide="pen-tool" width="16"></i>
+            <span class="fab-tooltip">التواقيع</span>
+        </a>
+        <a href="#sec-rec" class="fab-item" onclick="toggleFab()">
+            <i data-lucide="clipboard-list" width="16"></i>
+            <span class="fab-tooltip">التوصيات</span>
+        </a>
+        <a href="#sec-notes" class="fab-item" onclick="toggleFab()">
+            <span style="font-weight:bold; font-family:sans-serif;">3</span>
+            <span class="fab-tooltip">الملاحظات</span>
+        </a>
+        <a href="#sec-stats" class="fab-item" onclick="toggleFab()">
+            <span style="font-weight:bold; font-family:sans-serif;">2</span>
+            <span class="fab-tooltip">الإحصائيات</span>
+        </a>
+        <a href="#sec-general" class="fab-item" onclick="toggleFab()">
+            <span style="font-weight:bold; font-family:sans-serif;">1</span>
+            <span class="fab-tooltip">البيانات العامة</span>
+        </a>
+        <a href="#top" class="fab-item" onclick="toggleFab()">
+            <i data-lucide="arrow-up" width="16"></i>
+            <span class="fab-tooltip">أعلى الصفحة</span>
+        </a>
+    </div>
+</div>
+
+<div class="page" id="top">
+    
+    <header>
+        <div class="header-right">
+            <p>الجمهورية اليمنية</p>
+            <p>وزارة التربية والتعليم</p>
+            <p>مكتب التربية والتعليم - تعز</p>
+            <p>شعبة المناهج والتوجيه</p>
+            <p>إدارة التوجيه</p>
+        </div>
+        <div class="header-center">
+            <div style="font-family: 'Amiri', serif; font-size: 16px; font-weight: 900;">بسم الله الرحمن الرحيم</div>
+            <div class="header-title">استمارة الموجه الذكية</div>
+            <div class="header-subtitle">(للتقيم الشامل - توجيه مادة - محلي)</div>
+        </div>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Emblem_of_Yemen_%282%29.svg" alt="شعار اليمن" width="110">
+
+        </div>
+    </header>
+    <div style="border: 1px solid #000; padding: 3px; margin-bottom: 5px; background: #fdfdfd;">
+        <div class="info-row">
+            <div class="info-group"><span class="info-label">الموجه الزائر:</span><input type="text" id="visitorName" class="info-input"></div>
+            <div class="info-group"><span class="info-label">التخصص:</span><input type="text" id="visitorSpec" class="info-input"></div>
+        </div>
+        <div class="info-row">
+            <div class="info-group"><span class="info-label">نوع الزيارة:</span>
+                <select id="visitType" class="info-input">
+                    <option value="توجيهية">توجيهية</option>
+                    <option value="تقييمية">تقييمية</option>
+                    <option value="متابعة">متابعة</option>
+                    <option value="استطلاعية">استطلاعية</option>
+                </select>
+            </div>
+            <div class="info-group"><span class="info-label">التاريخ:</span><input type="text" id="visitDateMain" class="info-input" readonly></div>
+        </div>
+    </div>
+
+    <div class="section-header" id="sec-general">أولاً: الجوانب العامة</div>
+    <div style="border: 1px solid #ccc; padding: 3px; margin-bottom: 5px;">
+        <div class="info-row">
+            <div class="info-group"><span class="info-label">المدرسة:</span><input type="text" id="schoolName" class="info-input"></div>
+        </div>
+        <div class="info-row">
+            <div class="info-group"><span class="info-label">النوع:</span><select class="info-input"><option>حكومي</option><option>أهلي</option></select></div>
+            <div class="info-group"><span class="info-label">الفترة:</span><select class="info-input"><option>صباحية</option><option>مسائية</option></select></div>
+            <div class="info-group"><span class="info-label">المرحلة:</span><input type="text" class="info-input"></div>
+        </div>
+    </div>
+
+    <table>
+        <thead><tr><th colspan="5" style="background:#ddd;">الإدارة المدرسية (العدد)</th></tr><tr><th>مدير</th><th>وكيل</th><th>إداريون</th><th>عمال</th><th>أخرى</th></tr></thead>
+        <tbody><tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr></tbody>
+    </table>
+
+    <div class="section-header" id="sec-stats">ثانياً: الإحصائيات</div>
+    
+    <table>
+        <colgroup>
+            <col style="width: 28%;"> 
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+            <col style="width: 8%;">  
+        </colgroup>
+        <thead>
+            <tr><th colspan="10" style="background:#ddd;">المرحلة الأساسية</th></tr>
+            <tr><th>البيان/الصف</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+        </thead>
+        <tbody>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">عدد الطلاب</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">عدد الشعب</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">حصص المادة</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr><th colspan="6" style="background:#ddd;">المرحلة الثانوية</th></tr>
+            <tr><th width="15%">البيان/الصف</th><th>10</th><th>11 (علمي)</th><th>11 (أدبي)</th><th>12 (علمي)</th><th>12 (أدبي)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">عدد الطلاب</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">عدد الشعب</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td style="background:#f9f9f9; font-weight:bold;">حصص المادة</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+        </tbody>
+    </table>
+
+    <div style="display: flex; gap: 5px;">
+        <div style="flex: 1;">
+            <table>
+                <colgroup>
+                    <col style="width: 35%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 5%;">
+                </colgroup>
+                <thead>
+                    <tr><th colspan="6" style="background:#e8e8e8;">هيئة التدريس </th></tr>
+                    <tr><th>المادة</th><th>مطلوب</th><th>موجود</th><th>عجز</th><th>زيادة</th><th class="delete-cell"></th></tr>
+                </thead>
+                <tbody id="staffBody"></tbody>
+            </table>
+            <button onclick="addTeacherRow()" class="action-btn no-print">+ إضافة مدرس</button>
+        </div>
+        <div style="flex: 1;">
+            <table>
+                <colgroup>
+                    <col style="width: 45%;">
+                    <col style="width: 25%;">
+                    <col style="width: 25%;">
+                    <col style="width: 5%;">
+                </colgroup>
+                <thead>
+                    <tr><th colspan="4" style="background:#e8e8e8;">الكتب المدرسية</th></tr>
+                    <tr><th>الكتاب</th><th>الصف</th><th>العجز</th><th class="delete-cell"></th></tr>
+                </thead>
+                <tbody id="booksBody"></tbody>
+            </table>
+            <button onclick="addBookRow()" class="action-btn no-print">+ إضافة كتاب</button>
+        </div>
+    </div>
+
+    <div class="section-header" id="sec-notes">ثالثاً: الملاحظات والانطباعات</div>
+    
+    <table>
+        <thead>
+            <tr><th>الطابور</th><th>النشاط</th><th>الإذاعة</th><th colspan="2">الإدارة المدرسية</th><th colspan="2">الطلاب</th></tr>
+            <tr style="font-size:11px; background:#f0f0f0;"><th>الانتظام</th><th>المستوى</th><th>التفعيل</th><th>تواجدها</th><th>فاعليتها</th><th>حضور %</th><th>التزامهم</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><select><option></option><option>منتظم</option><option>غير منتظم</option></select></td>
+                <td><select><option></option><option>مرتفع</option><option>متوسط</option><option>منخفض</option></select></td>
+                <td><select><option></option><option>موظفة</option><option>غير موظفة</option></select></td>
+                <td><select><option></option><option>موجودة</option><option>غير موجودة</option></select></td>
+                <td><select><option></option><option>كبيرة</option><option>متوسطة</option><option>ضعيفة</option></select></td>
+                <td><input type="text" placeholder="%"></td>
+                <td><select><option></option><option>كبير</option><option>متوسط</option><option>ضعيف</option></select></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr><th colspan="4">النظافة</th><th colspan="2">المرافق الصحية</th></tr>
+            <tr style="font-size:11px; background:#f0f0f0;"><th>الفناء</th><th>الفصول</th><th>الطلاب</th><th>المظهر</th><th>موجودة</th><th>نظيفة</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><select><option></option><option>كبيرة</option><option>متوسطة</option><option>ضعيفة</option></select></td>
+                <td><select><option></option><option>كبيرة</option><option>متوسطة</option><option>ضعيفة</option></select></td>
+                <td><select><option></option><option>كبيرة</option><option>متوسطة</option><option>ضعيفة</option></select></td>
+                <td><select><option></option><option>لائق</option><option>غير لائق</option></select></td>
+                <td><select><option></option><option>موجودة</option><option>غير موجودة</option></select></td>
+                <td><select><option></option><option>نظيفة</option><option>غير نظيفة</option></select></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr><th colspan="2">الخطط</th><th colspan="2">القرارات</th><th colspan="2">النشرات</th><th colspan="2">السجلات</th></tr>
+            <tr style="font-size:11px; background:#f0f0f0;"><th>الوصول</th><th>العمل بها</th><th>الوصول</th><th>التوزيع</th><th>الوصول</th><th>العمل بها</th><th>الحالة</th><th>التوظيف</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><select><option></option><option>وصلت</option><option>لم تصل</option><option>أوصلها الموجه</option></select></td>
+                <td><select><option></option><option>يعمل بها</option><option>لا يعمل بها</option></select></td>
+                
+                <td><select><option></option><option>وصلت</option><option>لم تصل</option><option>أوصلها الموجه</option></select></td>
+                <td><select><option></option><option>موزعة على الأشهر</option><option>غير موزعة على الأشهر</option></select></td>
+                
+                <td><select><option></option><option>وصلت</option><option>لم تصل</option></select></td>
+                <td><select><option></option><option>يعمل بها</option><option>لا يعمل بها</option></select></td>
+                <td><select><option></option><option>كاملة</option><option>ناقصة</option></select></td>
+                <td><select><option></option><option>موظفة</option><option>غير موظفة</option></select></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead><tr><th colspan="3">المعمل</th><th colspan="2">المكتبة</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><select><option></option><option>يوجد</option><option>لا يوجد</option></select></td>
+                <td><select><option></option><option>مجهز</option><option>غير مجهز</option></select></td>
+                <td><select><option></option><option>موظف</option><option>غير موظف</option></select></td>
+                <td><select><option></option><option>توجد</option><option>لا توجد</option></select></td>
+                <td><select><option></option><option>موظفة</option><option>غير موظفة</option></select></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="rec-act-container" id="sec-rec">
+        <div class="rec-act-box">
+            <div class="rec-act-title">توصيات عامة</div>
+            <div id="rec-container"></div>
+            <button onclick="addRec()" class="action-btn no-print">+ إضافة توصية</button>
+        </div>
+        
+        <div class="rec-act-box">
+            <div class="rec-act-title">إجراءات تنفيذية</div>
+            <div id="act-container"></div>
+            <button onclick="addAct()" class="action-btn no-print">+ إضافة إجراء</button>
+        </div>
+    </div>
+
+    <div class="footer-section" id="sec-sig">
+        <div class="sig-grid">
+            
+            <div class="sig-box">
+                <div style="font-weight: bold; margin-bottom: 5px;">توقيع المدرسة بالعلم</div>
+                <input type="text" class="name-input">
+                <div class="sig-wrapper">
+                    <canvas id="sig1" class="sig-canvas"></canvas>
+                    <span class="clear-sig no-print" onclick="clearSig('sig1')">X</span>
+                </div>
+            </div>
+
+            <div class="sig-box">
+                <div style="font-weight: bold; margin-bottom: 5px;">المنسق</div>
+                <input type="text" class="name-input">
+                <div class="sig-wrapper">
+                    <canvas id="sig2" class="sig-canvas"></canvas>
+                    <span class="clear-sig no-print" onclick="clearSig('sig2')">X</span>
+                </div>
+            </div>
+
+            <div class="sig-box">
+                <div style="font-weight: bold; margin-bottom: 5px;">رئيس قسم التوجيه</div>
+                <input type="text" class="name-input">
+                <div class="sig-wrapper">
+                    <canvas id="sig3" class="sig-canvas"></canvas>
+                    <span class="clear-sig no-print" onclick="clearSig('sig3')">X</span>
+                </div>
+            </div>
+
+            <div class="sig-box">
+                <div style="font-weight: bold; margin-bottom: 5px;">مدير إدارة التربية بالمديرية</div>
+                <input type="text" class="name-input">
+                <div class="sig-wrapper">
+                    <canvas id="sig4" class="sig-canvas"></canvas>
+                    <span class="clear-sig no-print" onclick="clearSig('sig4')">X</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="btn-container no-print">
+        <button onclick="resetForm()" class="reset-btn">مسح البيانات</button>
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+
+    function toggleFab() {
+        const menu = document.getElementById('fabMenu');
+        const btn = document.querySelector('.fab-main');
+        const icon = btn.querySelector('i');
+        menu.classList.toggle('show');
+        btn.classList.toggle('active');
+        if (btn.classList.contains('active')) {
+            icon.setAttribute('data-lucide', 'x');
+        } else {
+            icon.setAttribute('data-lucide', 'menu');
+        }
+        lucide.createIcons();
+    }
+
+    const STORAGE_KEY = 'smart_visit_report_v13_final_teacher_data';
+    const sigIds = ['sig1', 'sig2', 'sig3', 'sig4'];
+    const canvases = {};
+
+    function initCanvases() {
+        sigIds.forEach(id => {
+            const canvas = document.getElementById(id);
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+            canvas.width = canvas.offsetWidth; 
+            canvas.height = canvas.offsetHeight;
+            
+            // تم تعديل سماكة الخط هنا إلى 1 (خط رفيع)
+            ctx.lineWidth = 1; 
+            ctx.strokeStyle = '#000';
+
+            const getPos = (e) => { 
+                const r = canvas.getBoundingClientRect(); 
+                return { 
+                    x: (e.touches ? e.touches[0].clientX : e.clientX) - r.left, 
+                    y: (e.touches ? e.touches[0].clientY : e.clientY) - r.top 
+                }; 
+            };
+            const start = (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
+            const move = (e) => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+            const end = () => { drawing = false; ctx.closePath(); saveFormData(); };
+
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('touchstart', (e)=>{e.preventDefault(); start(e)});
+            canvas.addEventListener('mousemove', move); canvas.addEventListener('touchmove', (e)=>{e.preventDefault(); move(e)});
+            canvas.addEventListener('mouseup', end); canvas.addEventListener('touchend', end);
+            canvases[id] = canvas;
+        });
+    }
+
+    async function shareReport() {
+        if (navigator.share) {
+            try { await navigator.share({ title: 'تقرير زيارة', url: window.location.href }); } catch (err) { console.error(err); }
+        } else { alert("المشاركة غير مدعومة في هذا المتصفح."); }
+    }
+
+    function addTeacherRow() {
+        const row = document.getElementById('staffBody').insertRow();
+        row.className = "tr-group";
+        row.innerHTML = `<td><input type="text"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="delete-cell"><button onclick="removeElement(this.closest('tr'))" class="delete-btn">×</button></td>`;
+        saveFormData();
+    }
+
+    function addBookRow() {
+        const row = document.getElementById('booksBody').insertRow();
+        row.className = "tr-group";
+        row.innerHTML = `<td><input type="text"></td><td><input type="text"></td><td><input type="number"></td><td class="delete-cell"><button onclick="removeElement(this.closest('tr'))" class="delete-btn">×</button></td>`;
+        saveFormData();
+    }
+
+    function addRec() {
+        const div = document.createElement('div');
+        div.className = 'counter-item tr-group';
+        div.innerHTML = `<input type="text" class="ruled-input"><button onclick="removeElement(this.parentElement)" class="delete-btn no-print">×</button>`;
+        document.getElementById('rec-container').appendChild(div);
+        saveFormData();
+    }
+
+    function addAct() {
+        const div = document.createElement('div');
+        div.className = 'counter-item tr-group';
+        div.innerHTML = `<input type="text" class="ruled-input"><button onclick="removeElement(this.parentElement)" class="delete-btn no-print">×</button>`;
+        document.getElementById('act-container').appendChild(div);
+        saveFormData();
+    }
+
+    function removeElement(el) { if(confirm('هل تريد حذف هذا الصف؟')) { el.remove(); saveFormData(); } }
+    function clearSig(id) { document.getElementById(id).getContext('2d').clearRect(0,0,300,100); saveFormData(); }
+
+    function saveFormData() {
+        const sigData = {}; sigIds.forEach(id => sigData[id] = canvases[id].toDataURL());
+        const data = {
+            booksRows: document.getElementById('booksBody').rows.length,
+            staffRows: document.getElementById('staffBody').rows.length,
+            recRows: document.getElementById('rec-container').children.length,
+            actRows: document.getElementById('act-container').children.length,
+            signatures: sigData,
+            inputs: Array.from(document.querySelectorAll('input, select, textarea')).map(el => ({ val: el.value, checked: el.checked, type: el.type }))
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        const t = document.getElementById('save-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1000);
+    }
+
+    function loadFormData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) { addTeacherRow(); addTeacherRow(); addBookRow(); addBookRow(); addRec(); addRec(); addAct(); addAct(); return; }
+        try {
+            const data = JSON.parse(saved);
+            document.getElementById('booksBody').innerHTML = ''; document.getElementById('staffBody').innerHTML = '';
+            document.getElementById('rec-container').innerHTML = ''; document.getElementById('act-container').innerHTML = '';
+            for(let i=0; i<data.booksRows; i++) addBookRow();
+            for(let i=0; i<data.staffRows; i++) addTeacherRow();
+            for(let i=0; i<data.recRows; i++) addRec();
+            for(let i=0; i<data.actRows; i++) addAct();
+            const inputs = document.querySelectorAll('input, select, textarea');
+            data.inputs.forEach((item, i) => { if(inputs[i]) { if(item.type === 'checkbox') inputs[i].checked = item.checked; else inputs[i].value = item.val; } });
+            if(data.signatures) { for(const [id, url] of Object.entries(data.signatures)) { const img = new Image(); img.onload = () => canvases[id].getContext('2d').drawImage(img,0,0); img.src = url; } }
+        } catch(e) {}
+    }
+
+    // تعيين التاريخ بأرقام إنجليزية
+    function setDate() {
+        const d = new Date();
+        const year = d.getFullYear();
+        // شهر ويوم برقمين
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        // النص بالشكل الإنجليزي الصريح
+        document.getElementById('visitDateMain').value = `${year}-${month}-${day}`;
+    }
+
+    function resetForm() { if(confirm('هل أنت متأكد من حذف جميع البيانات؟')) { localStorage.removeItem(STORAGE_KEY); location.reload(); } }
+    function debounce(f, t) { let timer; return (...args) => { clearTimeout(timer); timer = setTimeout(()=>f(...args), t); }; }
+    
+    window.addEventListener('load', () => { initCanvases(); 
+        // استدعاء دالة التاريخ
+        setDate();
+        loadFormData(); 
+        document.body.addEventListener('input', debounce(saveFormData, 500)); document.body.addEventListener('change', saveFormData); 
+    });
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تقرير الزيارة الذكي - نجاة شمسان</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* === إعدادات الصفحة === */
+        @page {
+            size: A4;
+            margin: 10mm; 
+        }
+
+        body { 
+            font-family: 'Times New Roman', serif; 
+            background: #ffffff; 
+            margin: 0; 
+            padding: 5px; 
+            direction: rtl;
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #000;
+            overscroll-behavior: none;
+            scroll-behavior: smooth;
+        }
+        
+        .page { 
+            background: white; 
+            width: 100%;
+            max-width: 210mm; 
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 0; 
+            border: none;
+            display: block; 
+        }
+
+        h3 {
+            text-align: center; color: #000; margin-bottom: 20px;
+            text-decoration: underline; font-size: 24px; font-weight: 900;
+        }
+
+        /* === الجداول === */
+        table { 
+            width: 100%; 
+            border-collapse: collapse !important; 
+            margin-bottom: 15px; 
+            font-size: 16px; 
+            font-weight: bold;
+            table-layout: fixed; 
+            border: 2px solid #000; 
+            background-color: #ffffff !important;
+        }
+        
+        tr { page-break-inside: avoid; background-color: #ffffff !important; }
+        
+        th, td { 
+            border: 1px solid #000 !important; 
+            text-align: center; 
+            vertical-align: middle; 
+            padding: 5px; 
+            word-wrap: break-word; 
+            background-color: #ffffff !important; 
+            color: #000;
+        }
+        
+        /* === عناوين المجالات === */
+        .section-header-row th, .section-header {
+            background-color: #ffffff !important; 
+            color: #8b0000 !important; 
+            font-size: 20px; 
+            font-weight: 900;
+            text-align: right;
+            padding: 10px;
+            border-bottom: 2px solid #000 !important;
+        }
+
+        th { 
+            background-color: #ffffff !important; 
+            font-weight: 900; 
+            color: #000; 
+        }
+
+        /* === المدخلات === */
+        input[type="number"], input[type="text"] { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            outline: none; 
+            background-color: #ffffff !important; 
+            text-align: center; 
+            font-weight: 900; 
+            color: #000 !important; 
+            font-size: 18px !important; 
+            font-family: 'Times New Roman', serif;
+            display: block;
+            padding: 0; margin: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .input-error {
+            border: 3px solid #ff0000 !important; 
+            background-color: #fff0f0 !important; 
+        }
+
+        .rating-text { font-size: 16px; font-weight: 900; background-color: #ffffff !important; }
+        .grade-excellent { color: #006400; } 
+        .grade-vgood { color: #00008B; }     
+        .grade-good { color: #B8860B; }      
+        .grade-acceptable { color: #8B4500; }
+        .grade-weak { color: #8B0000; }      
+
+        .subtotal-row td { background-color: #ffffff !important; font-weight: 900; color: #000; border-top: 2px solid #000 !important; }
+        .total-row th { background-color: #ffffff !important; color: #000; font-size: 18px; border-top: 3px solid #000 !important; font-weight: 900; }
+        
+        /* === المؤقت === */
+        .interaction-box { border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-radius: 4px; background: #fff; }
+        .timer-display { font-size: 20px; font-weight: 900; margin: 5px 0; color: #000; }
+        .interaction-btns { display: flex; justify-content: center; gap: 10px; margin-bottom: 5px; }
+        .btn-teacher { background: #000; color: white; padding: 8px 20px; border-radius: 4px; border:none; cursor: pointer; font-weight: bold; font-size: 16px;} 
+        .btn-student { background: #555; color: white; padding: 8px 20px; border-radius: 4px; border:none; cursor: pointer; font-weight: bold; font-size: 16px;} 
+        .btn-pause { background: #999; color: white; padding: 8px 20px; border-radius: 4px; border:none; cursor: pointer; font-weight: bold; font-size: 16px;}
+        .meter-container { height: 25px; background: #eee; border-radius: 0; overflow: hidden; display: flex; font-size: 13px; color: white; font-weight: bold; margin-top: 5px; border: 1px solid #000; }
+        .meter-teacher { background: #b71c1c; width: 50%; display: flex; align-items: center; justify-content: center; } 
+        .meter-student { background: #1b5e20; width: 50%; display: flex; align-items: center; justify-content: center; } 
+        
+        /* === التقارير === */
+        .feedback-report, .dev-plan { display: none; background-color: #fff; border: 2px solid #000; padding: 10px; margin-bottom: 15px; text-align: right; }
+        .report-section-title { font-weight: 900; color: #fff; background-color: #000; padding: 8px; margin-top: 10px; margin-bottom: 5px; font-size: 18px; }
+        .feedback-item { margin-bottom: 5px; font-size: 16px; font-weight: 900; border-bottom: 1px dotted #ccc; padding-bottom: 3px; color: #000; }
+        .positive-feedback { color: #006400; } 
+        .negative-feedback { color: #8B0000; } 
+        .special-recommendation { color: #00008B; font-weight: 900; background-color: #eef; padding: 2px; }
+
+        .plan-header th { 
+            background-color: #ffffff !important; 
+            color: #8b0000 !important; 
+            font-weight: 900; 
+            border: 1px solid #000; 
+            font-size: 16px;
+        }
+        .dev-plan table td { font-weight: 900; font-size: 16px; color: #000; background: #ffffff !important; } 
+
+        .generation-controls { display: flex; gap: 5px; margin-bottom: 10px; justify-content: flex-start; flex-wrap: wrap; }
+
+        /* === الزر العائم الذكي (تحديث جديد) === */
+        .floating-container {
+            position: fixed;
+            left: 20px;
+            bottom: 30px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column-reverse; /* الزر الرئيسي بالأسفل */
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .main-fab {
+            background-color: #000; /* لون الزر الرئيسي */
+            width: 60px;
+            height: 60px;
+            font-size: 30px;
+            z-index: 10001;
+        }
+
+        .sub-fab {
+            background-color: #8b0000; /* لون الأزرار الفرعية */
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+            opacity: 0;
+            transform: translateY(20px) scale(0);
+            pointer-events: none; /* غير قابل للنقر وهو مخفي */
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* كلاس التفعيل لإظهار الأزرار */
+        .floating-container.active .sub-fab {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            position: relative;
+        }
+
+        /* === القسم السفلي === */
+        .bottom-section { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+            margin-top: 20px; 
+            padding-top: 10px; 
+            border-top: 2px solid #000; 
+            page-break-inside: avoid; 
+        }
+        
+        @media screen and (max-width: 768px) {
+            .bottom-section { flex-direction: column; }
+            .chart-wrapper, .signature-wrapper { width: 100% !important; margin-bottom: 20px; }
+        }
+
+        .chart-wrapper { width: 58%; height: 200px; position: relative; }
+        .signature-wrapper { width: 38%; text-align: center; } 
+        
+        .sig-box { 
+            border: 2px solid #000; 
+            background: #ffffff; 
+            width: 100%; 
+            height: 100px; 
+            margin-top: 5px; 
+            touch-action: none; 
+        }
+        
+        .sheet-footer { width: 100%; text-align: center; font-size: 12pt; font-weight: bold; color: #000; border-top: 1px solid #000; padding-top: 10px; margin-top: 20px; margin-bottom: 10px; page-break-inside: avoid; }
+
+        textarea {
+             width: 100%; height: 80px; font-family: inherit; margin-top:10px; font-size: 16px; padding: 5px; 
+             background-color: #ffffff !important; border: 1px solid #000; color: #000; font-weight: bold;
+        }
+
+        .english-num { font-family: 'Arial', sans-serif !important; direction: ltr !important; }
+
+        @media print {
+            body { background: white; margin: 0; padding: 0; color: #000 !important; font-size: 14pt !important; }
+            .page { box-shadow: none; margin: 0; border: none; width: 100%; padding: 0; max-width: 100%; }
+            .no-print, .floating-container { display: none !important; } 
+            input, textarea { background-color: transparent !important; border: none !important; }
+            
+            .sig-box { border: none !important; background-color: transparent !important; }
+            canvas { display: block; } 
+
+            .section-header-row th, .section-header { 
+                 color: #000 !important; 
+                 background-color: #ffffff !important;
+                 border-bottom: 1px solid #000 !important;
+                 font-size: 14pt !important; 
+            }
+            
+            table td, table th, .rating-text, input, .english-num { font-size: 12pt !important; }
+            .plan-header th { color: #000 !important; font-size: 12pt !important; }
+            .grade-excellent, .grade-vgood, .grade-good, .grade-acceptable, .grade-weak { color: #000 !important; }
+            .positive-feedback, .negative-feedback, .special-recommendation { color: #000 !important; background-color: transparent !important; }
+            .chart-wrapper { page-break-inside: avoid; }
+        }
+
+        .btn-report, .btn-plan, .main-btn, .share-btn, .reset-btn { 
+            border: none; padding: 12px 20px; border-radius: 0; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 15px; color: white; margin: 4px;
+        }
+        .btn-report { background: #333; }
+        .btn-plan { background: #555; }
+        .main-btn { background: #000; }
+        .share-btn { background: #333; }
+        .reset-btn { background: #900; }
+        .clear-btn { background: #900; color:white; border:none; padding: 5px 10px; margin-top:5px; cursor: pointer; }
+    </style>
+</head>
+<body onload="loadSavedData()">
+
+<div id="floatingNav" class="floating-container no-print">
+    <button class="nav-btn sub-fab" onclick="scrollToTop()" title="للأعلى">⬆️</button>
+    <button class="nav-btn sub-fab" onclick="scrollToBottom()" title="للأسفل">⬇️</button>
+    
+    <button class="nav-btn main-fab" onclick="toggleNavMenu()">↕️</button>
+</div>
+
+<div class="page">
+    
+    <h3>استمارة تقييم المعلم الذكية (الجانب الفني)</h3>
+
+    <table>
+        <colgroup>
+            <col style="width: 15%"> 
+            <col style="width: 50%"> 
+            <col style="width: 18%"> 
+            <col style="width: 17%"> 
+        </colgroup>
+        <tr>
+            <th>الموضوع</th> <td><input type="text" id="subject" placeholder="عنوان الدرس" oninput="saveData()"></td>
+            <th>الفصل</th> <td><input type="text" id="class" placeholder="مثال: 9" oninput="saveData()"></td>
+        </tr>
+    </table>
+
+    <table>
+        <colgroup>
+            <col style="width: 15%"> 
+            <col style="width: 45%"> 
+            <col style="width: 15%"> 
+            <col style="width: 25%"> 
+        </colgroup>
+        <tr class="section-header-row">
+            <th colspan="4" style="text-align: center;">بيانات المعلم</th>
+        </tr>
+        <tr>
+            <th>اسم المعلم</th> <td><input type="text" id="teacherName" oninput="saveData()"></td>
+            <th>التخصص</th> <td><input type="text" id="specialty" oninput="saveData()"></td>
+        </tr>
+        <tr>
+            <th>المؤهل وتاريخه</th> <td><input type="text" id="qual" oninput="saveData()"></td>
+            <th>الحالة الوظيفية</th> <td><input type="text" id="status" oninput="saveData()"></td>
+        </tr>
+        <tr>
+            <th>سنوات الخبرة</th> <td><input type="number" id="exp" oninput="saveData()"></td>
+            <th>نصاب الحصص</th> <td><input type="number" id="quota" oninput="saveData()"></td>
+        </tr>
+    </table>
+
+    <div class="interaction-box no-print">
+        <h4 style="text-align:center; margin:0 0 5px 0;">⏱️ مؤشر زمن التفاعل الصفي</h4>
+        <div class="interaction-btns">
+            <button id="btnT" class="btn-teacher" onclick="startTimer('teacher')">🎤 المعلم</button>
+            <button id="btnP" class="btn-pause" onclick="pauseTimer()">⏸️</button>
+            <button id="btnS" class="btn-student" onclick="startTimer('student')">🗣️ الطلاب</button>
+        </div>
+        <div style="text-align: center;">
+            <span class="timer-display">T: <span id="timeTeacher">00:00</span></span> | 
+            <span class="timer-display">S: <span id="timeStudent">00:00</span></span>
+        </div>
+        <div class="meter-container">
+            <div id="meterTeacher" class="meter-teacher">0%</div>
+            <div id="meterStudent" class="meter-student">0%</div>
+        </div>
+    </div>
+
+    <table>
+        <colgroup>
+            <col style="width: 8%">
+            <col style="width: 52%">
+            <col style="width: 12%">
+            <col style="width: 13%">
+            <col style="width: 15%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>م</th>
+                <th>عناصر التقويم</th>
+                <th>عظمى</th>
+                <th>الدرجة</th>
+                <th>التقدير</th>
+            </tr>
+        </thead>
+        <tbody id="evaluationTable"></tbody>
+        <tfoot>
+            <tr class="total-row">
+                <th colspan="2" style="text-align: left; padding-left: 10px;">المجموع النهائي:</th>
+                <th class="english-num">100</th>
+                <th><span id="finalScore" class="english-num">0</span></th>
+                <th><span id="finalGrade">-</span></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div style="border: 2px solid #000; padding: 10px; margin-top: 15px; background: #fff;">
+        <h4>📝 التوصيات والتقارير:</h4>
+        
+        <div class="generation-controls no-print">
+            <button class="btn-report" onclick="generateReportOnly()">📄 التقرير</button>
+            <button class="btn-plan" onclick="toggleDevPlan()">🛠️ الخطة العلاجية</button>
+        </div>
+
+        <div id="feedbackBox" class="feedback-report">
+            <div id="feedbackContent"></div>
+        </div>
+
+        <div id="devPlanBox" class="dev-plan">
+            <h4 style="margin-top:0; border-bottom:2px solid #000; padding-bottom:5px; color: #000;">الخطة العلاجية والتطوير المهني:</h4>
+            <table style="width:100%; margin-top:5px; font-size:13px;">
+                <colgroup><col style="width: 25%"><col style="width: 40%"><col style="width: 20%"><col style="width: 15%"></colgroup>
+                <tr class="plan-header"><th>المجال</th><th>الإجراء</th><th>آلية التنفيذ</th><th>المدة</th></tr>
+                <tbody id="devPlanContent"></tbody>
+            </table>
+        </div>
+
+        <textarea id="manualNotes" placeholder="ملاحظات إضافية..." oninput="saveData()"></textarea>
+    </div>
+
+    <div class="bottom-section">
+        <div class="chart-wrapper">
+            <canvas id="evaluationChart"></canvas> 
+        </div>
+
+        <div class="signature-wrapper">
+            <h4 style="margin: 5px;">توقيع المعلم بالعلم:</h4>
+            <div class="sig-box">
+                <canvas id="sigCanvas" class="signature-pad" width="250" height="100"></canvas>
+            </div>
+            <button class="clear-btn no-print" onclick="clearSignature()">مسح التوقيع</button>
+        </div>
+    </div>
+
+    <div class="sheet-footer">
+        أتمتة/ نجاة شمسان
+    </div>
+
+    <div class="no-print btn-container" style="text-align: center; margin-top: 20px;">
+        <button class="main-btn" onclick="checkAndPrint()">🖨️ طباعة</button>
+        <button class="share-btn" onclick="shareForm()">📤 مشاركة التقرير</button>
+        <button class="reset-btn" onclick="resetForm()">🗑️ تصفير</button>
+    </div>
+
+</div>
+
+<script>
+    // === منطق الزر العائم ===
+    function toggleNavMenu() {
+        const nav = document.getElementById('floatingNav');
+        nav.classList.toggle('active');
+    }
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        toggleNavMenu(); // إغلاق القائمة بعد الاختيار
+    }
+    function scrollToBottom() {
+        window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+        toggleNavMenu(); // إغلاق القائمة بعد الاختيار
+    }
+
+    const items = [
+        { title: "التخطيط", section: "أولاً: التخطيط (20 درجة)", elements: ["الخطة الفصلية مكتملة العناصر", "الخطة اليومية مكتملة العناصر", "ملاءمة الأساليب والأنشطة والتقويم للأهداف", "السير في المقرر الدراسي"]},
+        { title: "الأداء", section: "ثانياً: الأداء (30 درجة)", elements: ["التهيئة للدرس", "تشجيع المتعلمين على التعبير الحر واحترام رأي الآخرين", "فعالية الأساليب والأنشطة وتوزيع الزمن", "التمكن من المادة العلمية وعرضها وربطها بالواقع", "تنمية مهارات التفكير المختلفة", "الكفاءة في إدارة الصف وتفعيل المشاركة"]},
+        { title: "النشاط", section: "ثالثاً: النشاط المدرسي (15 درجة)", elements: ["مشاركة المتعلمين وتشجيعهم على تنفيذ الأنشطة المختلفة", "تفاعل المتعلمين مع المعلم", "الأنشطة اللاصفية وتنوعها ومردودها التربوي"]},
+        { title: "التقويم", section: "رابعاً: التقويم (20 درجة)", elements: ["إعداد سجلات التقويم وتوظيفها", "الكفاءة في بناء أدوات القياس والقدرة على التشخيص والعلاج", "تنويع أساليب التقويم والدقة في تقدير الدرجات", "متابعة الواجبات المنزلية والتغذية الراجعة"]},
+        { title: "الشخصية", section: "خامساً: الشخصية (15 درجة)", elements: ["مستوى التحصيل لدى المتعلمين", "المظهر العام والقدوة الحسنة", "الالتزام بالدوام والتعاون مع رؤسائه وزملائه"]}
+    ];
+    
+    // === قاعدة البيانات ===
+    const feedbackDB = {
+        "الخطة الفصلية مكتملة العناصر": { strength: "أحسنت في إعداد الخطة الفصلية بشكل شامل.", weakness: "ضرورة استكمال عناصر الخطة الفصلية وتوزيع الوحدات زمنياً." },
+        "الخطة اليومية مكتملة العناصر": { strength: "إعداد متميز للخطة اليومية وتنوع في الأهداف.", weakness: "يجب الاهتمام بصياغة الأهداف السلوكية وتنوعها." },
+        "ملاءمة الأساليب والأنشطة والتقويم للأهداف": { strength: "اختيار ذكي للأنشطة بما يخدم أهداف الدرس.", weakness: "ينصح باختيار أنشطة صفية تخدم أهداف الدرس بشكل مباشر." },
+        "السير في المقرر الدراسي": { strength: "التزام ممتاز بالخطة الزمنية للمنهج.", weakness: "يوجد تأخر في المنهج، يجب وضع خطة لتعويض الفاقد." },
+        "التهيئة للدرس": { strength: "بداية مشوقة وتهيئة جاذبة لانتباه الطلاب.", weakness: "الاهتمام بالتهيئة الحافزة لجذب انتباه الطلاب." },
+        "تشجيع المتعلمين على التعبير الحر واحترام رأي الآخرين": { strength: "بيئة صفية رائعة تشجع على الحوار واحترام الرأي.", weakness: "إتاحة الفرصة للطلاب للتعبير عن آرائهم." },
+        "فعالية الأساليب والأنشطة وتوزيع الزمن": { strength: "إدارة وقت الدرس بفاعلية وتنوع الأساليب.", weakness: "التوزيع الزمني المتوازن لخطوات الدرس." },
+        "التمكن من المادة العلمية وعرضها وربطها بالواقع": { strength: "تمكن علمي عالٍ وربط متميز بالواقع.", weakness: "ربط المفاهيم العلمية بالواقع." },
+        "تنمية مهارات التفكير المختلفة": { strength: "أسئلة صفية مثيرة للتفكير وتنمي المهارات العليا.", weakness: "تفعيل مهارات التفكير العليا." },
+        "الكفاءة في إدارة الصف وتفعيل المشاركة": { strength: "قيادة صفية حكيمة وجذب انتباه الجميع.", weakness: "استخدام أساليب متنوعة لضبط الصف." },
+        "مشاركة المتعلمين وتشجيعهم على تنفيذ الأنشطة المختلفة": { strength: "تحفيز ممتاز للطلاب للمشاركة في الأنشطة.", weakness: "تفعيل العمل الجماعي." },
+        "تفاعل المتعلمين مع المعلم": { strength: "تفاعل صفي حيوي ومثمر.", weakness: "دمج الطلاب ذوي المشاركة المحدودة." },
+        "الأنشطة اللاصفية وتنوعها ومردودها التربوي": { strength: "تفعيل متميز للأنشطة اللاصفية.", weakness: "تفعيل الأنشطة اللاصفية بما يخدم المادة." },
+        "إعداد سجلات التقويم وتوظيفها": { strength: "دقة ونظام في سجلات الرصد والمتابعة.", weakness: "استيفاء بيانات سجلات الرصد أولاً بأول." },
+        "الكفاءة في بناء أدوات القياس والقدرة على التشخيص والعلاج": { strength: "قدرة عالية على التشخيص وبناء الاختبارات.", weakness: "تنويع أدوات القياس." },
+        "تنويع أساليب التقويم والدقة في تقدير الدرجات": { strength: "عدالة وموضوعية في التقييم ورصد الدرجات.", weakness: "تحري الدقة في رصد الدرجات." },
+        "متابعة الواجبات المنزلية والتغذية الراجعة": { strength: "متابعة دقيقة للواجبات وتغذية راجعة بناءة.", weakness: "تقديم تغذية راجعة وصفية على الواجبات." },
+        "مستوى التحصيل لدى المتعلمين": { strength: "مستوى تحصيلي مبشر يعكس جهد المعلم.", weakness: "وضع خطة لدعم الطلاب المتعثرين." },
+        "المظهر العام والقدوة الحسنة": { strength: "نموذج يحتذى به في المظهر والسلوك.", weakness: "الالتزام بالمظهر التربوي." },
+        "الالتزام بالدوام والتعاون مع رؤسائه وزملائه": { strength: "انضباط وظيفي وتعاون مثمر مع الزملاء.", weakness: "تعزيز التعاون المهني." }
+    };
+
+    const devPlanDB = { 
+        "التخطيط": { action: "ورشة في التخطيط.", method: "تدريب", duration: "3 أيام" }, 
+        "الأداء": { action: "زيارة تبادل خبرات.", method: "مشاهدة", duration: "أسبوع" }, 
+        "النشاط": { action: "تنفيذ نشاط نموذجي.", method: "تطبيق", duration: "شهر" }, 
+        "التقويم": { action: "مراجعة لائحة التقويم.", method: "قراءة", duration: "أسبوعين" }, 
+        "الشخصية": { action: "توجيه فردي.", method: "حوار", duration: "يوم" } 
+    };
+
+    const tableBody = document.getElementById('evaluationTable');
+    let counter = 1;
+    items.forEach((sec, secIndex) => {
+        tableBody.innerHTML += `<tr class="section-header-row"><td colspan="5" class="section-header">${sec.section}</td></tr>`;
+        sec.elements.forEach((elm, elmIndex) => {
+            let uniqueId = `field_${secIndex}_${elmIndex}`;
+            tableBody.innerHTML += `<tr>
+                <td class="english-num">${counter++}</td>
+                <td class="text-right" style="text-align: right; padding-right: 5px;">${elm}</td>
+                <td class="english-num">5</td>
+                <td style="padding:0;"><input type="number" id="${uniqueId}" class="score-input" max="5" min="0" oninput="updateCalculations(this)" data-name="${elm}" data-section="${sec.title}"></td>
+                <td class="rating-text" id="rating_${uniqueId}">-</td>
+            </tr>`;
+        });
+        tableBody.innerHTML += `<tr class="subtotal-row"><td colspan="2" class="text-right">مجموع ${sec.title}</td><td class="english-num">${sec.elements.length * 5}</td><td><span id="subTotal-${sec.title}" class="english-num">0</span></td><td>-</td></tr>`;
+    });
+
+    let chartInstance = null;
+    function initChart() {
+        const ctxChart = document.getElementById('evaluationChart').getContext('2d');
+        chartInstance = new Chart(ctxChart, { 
+            type: 'bar', 
+            data: { labels: ['التخطيط', 'الأداء', 'النشاط', 'التقويم', 'الشخصية'], datasets: [{ label: 'الدرجة المستحقة', data: [0, 0, 0, 0, 0], backgroundColor: ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#9b59b6'], borderWidth: 1 }] }, 
+            options: { 
+                responsive: true,
+                maintainAspectRatio: false, 
+                scales: { y: { beginAtZero: true, max: 30 } }, 
+                plugins: { legend: { display: false } } 
+            } 
+        });
+    }
+    initChart();
+
+    function updateCalculations(triggeredInput) {
+        if(triggeredInput) {
+            triggeredInput.classList.remove('input-error');
+            if (parseFloat(triggeredInput.value) > 5) triggeredInput.value = 5;
+            if (parseFloat(triggeredInput.value) < 0) triggeredInput.value = 0;
+        }
+
+        let inputs = document.querySelectorAll('.score-input'); 
+        let total = 0; 
+        let sectionTotals = { "التخطيط": 0, "الأداء": 0, "النشاط": 0, "التقويم": 0, "الشخصية": 0 };
+        
+        inputs.forEach(input => {
+            let val = parseFloat(input.value); 
+            let cellRating = document.getElementById("rating_" + input.id); 
+            let sectionName = input.getAttribute('data-section');
+            
+            if (!isNaN(val)) {
+                total += val; 
+                sectionTotals[sectionName] += val;
+                
+                if(val >= 4.5) cellRating.innerHTML = "<span class='grade-excellent'>ممتاز</span>"; 
+                else if(val >= 3.5) cellRating.innerHTML = "<span class='grade-vgood'>جيد جداً</span>"; 
+                else if(val >= 2.5) cellRating.innerHTML = "<span class='grade-good'>جيد</span>"; 
+                else if(val >= 1.5) cellRating.innerHTML = "<span class='grade-acceptable'>مقبول</span>"; 
+                else cellRating.innerHTML = "<span class='grade-weak'>ضعيف</span>";
+            } else { 
+                cellRating.innerText = "-"; 
+            }
+        });
+
+        for (let secTitle in sectionTotals) document.getElementById(`subTotal-${secTitle}`).innerText = sectionTotals[secTitle].toFixed(1).replace(/\.0$/, '');
+        document.getElementById('finalScore').innerText = total.toFixed(1).replace(/\.0$/, '');
+        
+        let finalGrade = document.getElementById('finalGrade');
+        if(total >= 90) { finalGrade.innerText = "ممتاز"; finalGrade.className = "grade-excellent"; }
+        else if(total >= 80) { finalGrade.innerText = "جيد جداً"; finalGrade.className = "grade-vgood"; }
+        else if(total >= 65) { finalGrade.innerText = "جيد"; finalGrade.className = "grade-good"; }
+        else if(total >= 50) { finalGrade.innerText = "مقبول"; finalGrade.className = "grade-acceptable"; }
+        else { finalGrade.innerText = "ضعيف"; finalGrade.className = "grade-weak"; }
+
+        chartInstance.data.datasets[0].data = [sectionTotals["التخطيط"], sectionTotals["الأداء"], sectionTotals["النشاط"], sectionTotals["التقويم"], sectionTotals["الشخصية"]];
+        chartInstance.update();
+        
+        saveData();
+    }
+
+    function saveData() {
+        let inputs = document.querySelectorAll('input:not([type="file"]), textarea');
+        let data = {};
+        inputs.forEach(input => { if (input.id) data[input.id] = input.value; });
+        localStorage.setItem('smartForm_v14_data', JSON.stringify(data));
+        let timerData = { t: teacherSeconds, s: studentSeconds };
+        localStorage.setItem('smartForm_v14_timer', JSON.stringify(timerData));
+    }
+
+    function loadSavedData() {
+        let savedData = localStorage.getItem('smartForm_v14_data');
+        if (savedData) {
+            let data = JSON.parse(savedData);
+            for (let id in data) { let el = document.getElementById(id); if (el) el.value = data[id]; }
+            updateCalculations();
+        }
+        let savedTimer = localStorage.getItem('smartForm_v14_timer');
+        if (savedTimer) { let tData = JSON.parse(savedTimer); teacherSeconds = tData.t || 0; studentSeconds = tData.s || 0; updateTimerDisplay(); }
+    }
+
+    function resetForm() {
+        if (!confirm("⚠️ هل أنت متأكد من حذف جميع البيانات؟")) { return; }
+        localStorage.clear();
+        document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        document.querySelectorAll('.rating-text').forEach(el => el.innerHTML = '-');
+        document.querySelectorAll('[id^="subTotal-"]').forEach(el => el.innerText = '0');
+        document.getElementById('finalScore').innerText = '0';
+        document.getElementById('finalGrade').innerText = '-';
+        if (chartInstance) { chartInstance.data.datasets[0].data = [0, 0, 0, 0, 0]; chartInstance.update(); }
+        clearSignature();
+        clearInterval(timerInterval); teacherSeconds = 0; studentSeconds = 0; updateTimerDisplay();
+        document.getElementById('feedbackBox').style.display = 'none';
+        document.getElementById('devPlanBox').style.display = 'none';
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    }
+
+    function analyzeData(showReport, showPlan) {
+        let inputs = document.querySelectorAll('.score-input'); 
+        let strengths = [];
+        let weaknesses = [];
+        let weakSections = new Set();
+        let totalScore = parseFloat(document.getElementById('finalScore').innerText);
+        let finalGrade = document.getElementById('finalGrade').innerText;
+
+        inputs.forEach(input => {
+            let val = parseFloat(input.value); 
+            let name = input.getAttribute('data-name'); 
+            let section = input.getAttribute('data-section');
+            if (!isNaN(val)) {
+                if (val >= 4) {
+                    if (feedbackDB[name] && feedbackDB[name].strength) {
+                        strengths.push("• " + feedbackDB[name].strength);
+                    }
+                } else {
+                    weaknesses.push("• " + (feedbackDB[name] ? feedbackDB[name].weakness : "يحتاج لتطوير"));
+                    weakSections.add(section);
+                }
+            }
+        });
+
+        if (totalScore >= 90) {
+            strengths.push("🌟 توصية إضافية: الاستفادة من تميز المعلم في نقل الخبرة للزملاء (تقديم دروس نموذجية).");
+        }
+        if (totalScore < 65) {
+            weaknesses.push("⚠️ توصية إضافية: ضرورة تنسيق زيارات تبادلية للمعلم وحضور حصص نموذجية لدى الزملاء.");
+        }
+
+        let totalTime = teacherSeconds + studentSeconds;
+        let interactionText = "";
+        if (totalTime > 0) {
+            let tPercent = Math.round((teacherSeconds / totalTime) * 100);
+            interactionText = `نسبة حديث المعلم: ${tPercent}%`;
+        } else {
+            interactionText = "لم يتم رصد الزمن.";
+        }
+
+        const feedbackBox = document.getElementById('feedbackBox');
+        const feedbackContent = document.getElementById('feedbackContent');
+        const devPlanBox = document.getElementById('devPlanBox');
+        const devPlanContent = document.getElementById('devPlanContent');
+
+        if (showReport) {
+            feedbackBox.style.display = 'block';
+            let reportHTML = `
+                <div class="report-section-title">ملخص التقييم</div>
+                <div class="feedback-item">الدرجة: <b>${totalScore}</b> | التقدير: <b>${finalGrade}</b></div>
+                <div class="feedback-item">${interactionText}</div>
+                
+                <div class="report-section-title" style="background-color: #006400 !important;">نقاط القوة والتعزيز</div>
+                ${strengths.length > 0 ? strengths.map(s => {
+                    let className = s.includes("توصية إضافية") ? "feedback-item special-recommendation" : "feedback-item positive-feedback";
+                    return `<div class="${className}">${s}</div>`;
+                }).join('') : '<div class="feedback-item">لا توجد نقاط قوة بارزة.</div>'}
+                
+                <div class="report-section-title" style="background-color: #8B0000 !important;">التوصيات وفرص التحسين</div>
+                ${weaknesses.length > 0 ? weaknesses.map(w => {
+                    let className = w.includes("توصية إضافية") ? "feedback-item special-recommendation" : "feedback-item negative-feedback";
+                    return `<div class="${className}">${w}</div>`;
+                }).join('') : '<div class="feedback-item">أداء متميز، لا توجد ملاحظات جوهرية.</div>'}
+            `;
+            feedbackContent.innerHTML = reportHTML;
+        }
+
+        if (showPlan) {
+            if (weakSections.size > 0) {
+                devPlanBox.style.display = 'block';
+                let devPlanHTML = "";
+                weakSections.forEach(sec => { 
+                    let plan = devPlanDB[sec]; 
+                    devPlanHTML += `<tr><td>${sec}</td><td>${plan.action}</td><td>${plan.method}</td><td>${plan.duration}</td></tr>`; 
+                });
+                devPlanContent.innerHTML = devPlanHTML;
+            } else {
+                alert("لا توجد نقاط ضعف تتطلب خطة علاجية.");
+                devPlanBox.style.display = 'none';
+            }
+        }
+    }
+
+    function validateCompletion() {
+        let inputs = document.querySelectorAll('.score-input'); 
+        let isComplete = true; 
+        let firstEmpty = null;
+
+        inputs.forEach(input => { 
+            if (input.value === "" || input.value === null) { 
+                isComplete = false; 
+                input.classList.add('input-error'); 
+                if (!firstEmpty) firstEmpty = input; 
+            } else {
+                input.classList.remove('input-error');
+            }
+        });
+
+        if (!isComplete) {
+            alert("⚠️ تنبيه: يجب تعبئة جميع بنود التقييم أولاً.");
+            if (firstEmpty) {
+                firstEmpty.scrollIntoView({behavior: "smooth", block: "center"});
+                firstEmpty.focus();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function generateReportOnly() { 
+        if (!validateCompletion()) return; 
+        analyzeData(true, false); 
+    }
+
+    function toggleDevPlan() {
+        const box = document.getElementById('devPlanBox');
+        if (box.style.display === 'none') { 
+             if (!validateCompletion()) return;
+             analyzeData(false, true); box.scrollIntoView({behavior: "smooth"}); 
+        } 
+        else { box.style.display = 'none'; }
+    }
+    
+    function checkAndPrint() { 
+        if (validateCompletion()) {
+            window.print(); 
+        }
+    }
+
+    function shareForm() {
+        if (!validateCompletion()) return;
+
+        let teacherName = document.getElementById('teacherName').value || "معلم";
+        let score = document.getElementById('finalScore').innerText;
+        let grade = document.getElementById('finalGrade').innerText;
+        
+        let shareText = `تقرير زيارة إشرافية\nالمعلم: ${teacherName}\nالدرجة: ${score}/100 (${grade})\n\n`;
+        
+        let strengths = [];
+        let weaknesses = [];
+        let totalScore = parseFloat(score);
+
+        let inputs = document.querySelectorAll('.score-input'); 
+        inputs.forEach(input => {
+            let val = parseFloat(input.value);
+            let name = input.getAttribute('data-name');
+            if(val >= 4) { if(feedbackDB[name]) strengths.push("✅ " + feedbackDB[name].strength); }
+            else { if(feedbackDB[name]) weaknesses.push("⭕ " + feedbackDB[name].weakness); }
+        });
+
+        if (totalScore >= 90) strengths.push("🌟 يوصى بنقل الخبرة للزملاء (درس نموذجي).");
+        if (totalScore < 65) weaknesses.push("⚠️ يوصى بحضور حصص نموذجية لدى الزملاء.");
+
+        if(strengths.length > 0) shareText += "أبرز نقاط التميز:\n" + strengths.slice(0, 3).join('\n') + "\n...\n\n";
+        if(weaknesses.length > 0) shareText += "أهم التوصيات:\n" + weaknesses.join('\n');
+        else shareText += "الأداء متميز.";
+
+        if (navigator.share) {
+            navigator.share({ title: 'تقرير زيارة', text: shareText }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => { alert("تم نسخ الملخص."); });
+        }
+    }
+
+    let teacherSeconds = 0; let studentSeconds = 0; let timerInterval = null;
+    function startTimer(speaker) { clearInterval(timerInterval); timerInterval = setInterval(() => { if (speaker === 'teacher') teacherSeconds++; else studentSeconds++; updateTimerDisplay(); saveData(); }, 1000); }
+    function pauseTimer() { clearInterval(timerInterval); saveData(); }
+    function updateTimerDisplay() { 
+        document.getElementById('timeTeacher').innerText = formatTime(teacherSeconds); document.getElementById('timeStudent').innerText = formatTime(studentSeconds); 
+        let total = teacherSeconds + studentSeconds; if(total>0) { document.getElementById('meterTeacher').style.width = (teacherSeconds/total)*100 + "%"; document.getElementById('meterStudent').style.width = (studentSeconds/total)*100 + "%"; }
+    }
+    function formatTime(sec) { let m = Math.floor(sec/60); let s = sec%60; return (m<10?"0"+m:m) + ":" + (s<10?"0"+s:s); }
+
+    const canvas = document.getElementById('sigCanvas'); const ctx = canvas.getContext('2d'); let drawing = false;
+    function getTouchPos(canvasDom, touchEvent) { var rect = canvasDom.getBoundingClientRect(); return { x: touchEvent.touches[0].clientX - rect.left, y: touchEvent.touches[0].clientY - rect.top }; }
+    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mouseup', () => { drawing = false; });
+    canvas.addEventListener('mousemove', (e) => { if (drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; var pos = getTouchPos(canvas, e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); });
+    canvas.addEventListener('touchend', (e) => { e.preventDefault(); drawing = false; });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (drawing) { var pos = getTouchPos(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); } });
+    function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+</script>
+
+</body>
+</html>
+
