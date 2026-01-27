@@ -24,14 +24,16 @@
             font-size: 14px;
         }
 
-        /* === شريط الأدوات === */
+        /* === شريط الأدوات (تم تعديل المسافات لحل مشكلة اختفاء الزر) === */
         .toolbar {
             position: fixed; top: 0; left: 0; right: 0; height: 55px;
-            background: #2c3e50; display: flex; justify-content: center; align-items: center; gap: 15px; 
+            background: #2c3e50; display: flex; justify-content: center; align-items: center; 
+            gap: 5px; /* تم التعديل من 15px إلى 5px لتوفير المساحة */
             z-index: 9999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .btn { 
-            padding: 8px 15px; border: none; border-radius: 4px; color: #fff; 
+            padding: 8px 10px; /* تم التعديل من 15px إلى 10px لضمان احتواء الأزرار */
+            border: none; border-radius: 4px; color: #fff; 
             font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;
         }
         .btn-print { background: #27ae60; }
@@ -341,7 +343,7 @@
                                         <th colspan="15">نسبة عجز الكتب %</th>
                                     </tr>
                                     <tr>
-                                        <th width="35">عدد</th><th width="35">طلب</th><th width="35">وجد</th><th width="35">عجز</th><th width="35">زود</th>
+                                        <th width="35">عدد</th><th width="35">مطلوب</th><th width="35">موجود</th><th width="35">عجز</th><th width="35">زائد</th>
                                         <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th style="background:#eee">مج</th>
                                         <th>10</th><th>11ع</th><th>11أ</th><th>12ع</th><th>12أ</th>
                                     </tr>
@@ -364,7 +366,7 @@
 
                         <div class="head-bar" style="margin-top:10px;">الانطباعات العامة</div>
                         <div class="imp-grid">
-                            <div class="imp-item"><div class="imp-lbl">المبنى</div><select class="imp-select auto-save"><option></option><option>صالح</option><option>غير صالح</option><option>يحتاج ترميم</option><option>إضافة فصول</option><option>سور للمدرسة</option></select></div>
+                            <div class="imp-item"><div class="imp-lbl">المبنى</div><select class="imp-select auto-save"><option></option><option>صالح</option><option>غير صالح</option><option>يحتاج ترميم</option><option>إضافة فصول</option><option>يحتاج سور للمدرسة</option></select></div>
                             <div class="imp-item"><div class="imp-lbl">الأثاث</div><select class="imp-select auto-save"><option></option><option>متوفر</option><option>غير متوفر</option><option>عجز</option></select></div>
                             <div class="imp-item"><div class="imp-lbl">السجلات</div><select class="imp-select auto-save"><option></option><option>متوفرة</option><option>غير متوفرة</option><option>عجز</option></select></div>
                             <div class="imp-item"><div class="imp-lbl">الخطة</div><select class="imp-select auto-save"><option></option><option>مفعلة</option><option>غير مفعلة</option></select></div>
@@ -514,7 +516,7 @@
 
     let totalTr = document.createElement('tr');
     totalTr.style.background = '#bbb';
-    totalTr.innerHTML = `<td class="sticky" style="font-weight:900;">المجمالي</td>${'<td><input type="text" lang="en" class="ro" style="font-weight:900;" readonly></td>'.repeat(20)}`;
+    totalTr.innerHTML = `<td class="sticky" style="font-weight:900;">الإجمالي</td>${'<td><input type="text" lang="en" class="ro" style="font-weight:900;" readonly></td>'.repeat(20)}`;
     tB.appendChild(totalTr);
 
     window.resetData = function() {
@@ -591,7 +593,7 @@
         if (title === 'local') {
             setOption(s1, "الموجه المحلي");
             setOption(s2, "رئيس قسم التوجيه بالمديرية");
-            setOption(s3, "مدير مكتب التربية والتعليم بالمديرية");
+            setOption(s3, "مدير إدارة التربية والتعليم بالمديرية");
             box4.style.display = 'none';
         } else {
             setOption(s1, "الموجه المركزي");
