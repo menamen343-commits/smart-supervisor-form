@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>التقرير الاحصائي الذكي مكتب التربية تعز</title>
+    <title>التقرير الإحصائي الذكي</title>
     <style>
         :root {
             --header-bg: #e1e8ed;
@@ -24,15 +24,15 @@
             font-size: 14px;
         }
 
-        /* === شريط الأدوات (تم تعديل المحاذاة للإزاحة لليمين) === */
+        /* === شريط الأدوات (محاذاة لليمين) === */
         .toolbar {
             position: fixed; top: 0; left: 0; right: 0; height: 55px;
             background: #2c3e50; 
             display: flex; 
-            justify-content: flex-start; /* تغيير من center إلى flex-start للإزاحة لليمين */
+            justify-content: flex-start; /* محاذاة لليمين */
             align-items: center; 
             gap: 5px; 
-            padding-right: 20px; /* إضافة هامش من اليمين لإزاحة الأزرار قليلاً */
+            padding-right: 20px; /* إزاحة بسيطة من اليمين */
             z-index: 9999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .btn { 
@@ -510,7 +510,7 @@
     bC.insertAdjacentHTML('beforeend',`<td><input type="text" lang="en" class="ro gm" readonly></td><td><input type="text" lang="en" class="ro gf" readonly></td><td rowspan="3" class="ro" style="background:#666;color:#fff" id="sup">0</td>`);
     bS.insertAdjacentHTML('beforeend',`<td colspan="2" style="background:#999"></td>`); bSec.insertAdjacentHTML('beforeend',`<td colspan="2" style="background:#999"></td>`);
     
-    const subs=["القرآن الكريم","التربية الإسلامية","اللغة العربية","اللغة الإنجليزية","الرياضيات","العلوم (1-9)","الفيزياء","الكيمياء","الأحياء","الاجتماعيات","التاريخ","الجغرافيا","فلسفة","علم نفس","مجتمع","اجتماع","اقتصاد","صفوف أولية","خدمة اجتماعية","أنشطة","فنية","رياضية","مهنية","موسيقية","حاسوب","أخرى"];
+    const subs=["القرآن الكريم","التربية الإسلامية","اللغة العربية","اللغة الإنجليزية","الرياضيات","العلوم (4-9)","الفيزياء","الكيمياء","الأحياء","الاجتماعيات","التاريخ","الجغرافيا","فلسفة","علم نفس","مجتمع","اجتماع","اقتصاد","صفوف أولية","خدمة اجتماعية","أنشطة","فنية","رياضية","مهنية","موسيقية","حاسوب","أخرى"];
     const tB=document.getElementById('tb-bud');
     subs.forEach((s,i)=>{
         let tr=document.createElement('tr');
