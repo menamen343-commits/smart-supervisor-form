@@ -24,15 +24,19 @@
             font-size: 14px;
         }
 
-        /* === شريط الأدوات (تم تعديل المسافات لحل مشكلة اختفاء الزر) === */
+        /* === شريط الأدوات (تم تعديل المحاذاة للإزاحة لليمين) === */
         .toolbar {
             position: fixed; top: 0; left: 0; right: 0; height: 55px;
-            background: #2c3e50; display: flex; justify-content: center; align-items: center; 
-            gap: 5px; /* تم التعديل من 15px إلى 5px لتوفير المساحة */
+            background: #2c3e50; 
+            display: flex; 
+            justify-content: flex-start; /* تغيير من center إلى flex-start للإزاحة لليمين */
+            align-items: center; 
+            gap: 5px; 
+            padding-right: 20px; /* إضافة هامش من اليمين لإزاحة الأزرار قليلاً */
             z-index: 9999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .btn { 
-            padding: 8px 10px; /* تم التعديل من 15px إلى 10px لضمان احتواء الأزرار */
+            padding: 8px 10px; 
             border: none; border-radius: 4px; color: #fff; 
             font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;
         }
