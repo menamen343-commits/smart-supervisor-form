@@ -784,8 +784,10 @@
 
         /* === القسم السفلي === */
         .bottom-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; padding-top: 5px; border-top: 1px solid #000; page-break-inside: avoid; width: 98%; margin: 10px auto; }
-        .chart-wrapper { width: 58%; height: 150px; position: relative; }
-        .signature-wrapper { width: 38%; text-align: center; } 
+        
+        .chart-wrapper { width: 34%; height: 150px; position: relative; }
+        .signature-wrapper { width: 32%; text-align: center; } 
+        
         .sig-box { border: 1px solid #000; background: #ffffff; width: 100%; height: 80px; margin-top: 2px; touch-action: none; }
         .sheet-footer { width: 100%; text-align: center; font-size: 11pt; font-weight: bold; color: #000; border-top: 1px solid #000; padding-top: 5px; margin-top: 10px; margin-bottom: 5px; page-break-inside: avoid; }
         textarea { width: 98%; height: 50px; font-family: inherit; margin: 5px auto; display:block; font-size: 14px; padding: 2px; background-color: #ffffff !important; border: 1px solid #000; color: #000; font-weight: bold; }
@@ -800,6 +802,7 @@
             table.print-frame > thead > tr > td { border-bottom: 2px solid #000 !important; }
             .content-table, .content-table th, .content-table td { border: 1px solid #000 !important; }
             .header-wrapper { background: transparent !important; }
+            /* إخفاء حدود مربعات التوقيع عند الطباعة */
             .sig-box { border: none !important; background-color: transparent !important; }
             canvas { display: block; }
             .section-header-row th { background-color: #ddd !important; border-bottom: 1px solid #000 !important; }
@@ -940,10 +943,19 @@
 
                 <div class="bottom-section">
                     <div class="chart-wrapper"><canvas id="evaluationChart"></canvas></div>
+                    
                     <div class="signature-wrapper">
                         <h4 style="margin: 2px; font-size:12px;">توقيع المعلم:</h4>
+                        <input type="text" id="teacherSignName" placeholder="اكتب اسم المعلم هنا" oninput="saveData()" style="border-bottom: 1px dotted #000; width: 90%; margin: 2px auto; font-size: 11px !important;">
                         <div class="sig-box"><canvas id="sigCanvas" class="signature-pad" width="200" height="80"></canvas></div>
                         <button class="clear-btn no-print" onclick="clearSignature()">مسح التوقيع</button>
+                    </div>
+
+                    <div class="signature-wrapper">
+                        <h4 style="margin: 2px; font-size:12px;">الموجه الزائر:</h4>
+                        <input type="text" id="visitorName" placeholder="اكتب اسم الموجه هنا" oninput="saveData()" style="border-bottom: 1px dotted #000; width: 90%; margin: 2px auto; font-size: 11px !important;">
+                        <div class="sig-box"><canvas id="visitorCanvas" class="signature-pad" width="200" height="80"></canvas></div>
+                        <button class="clear-btn no-print" onclick="clearVisitorSignature()">مسح التوقيع</button>
                     </div>
                 </div>
 
@@ -1030,7 +1042,21 @@
         const ctxChart = document.getElementById('evaluationChart').getContext('2d');
         chartInstance = new Chart(ctxChart, { 
             type: 'bar', 
-            data: { labels: ['تخطيط', 'أداء', 'نشاط', 'تقويم', 'شخصية'], datasets: [{ label: 'الدرجة', data: [0, 0, 0, 0, 0], backgroundColor: ['#333', '#555', '#777', '#999', '#bbb'], borderWidth: 1 }] }, 
+            data: { 
+                labels: ['تخطيط', 'أداء', 'نشاط', 'تقويم', 'شخصية'], 
+                datasets: [{ 
+                    label: 'الدرجة', 
+                    data: [0, 0, 0, 0, 0], 
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)', 
+                        'rgba(75, 192, 192, 0.8)', 
+                        'rgba(255, 159, 64, 0.8)', 
+                        'rgba(153, 102, 255, 0.8)', 
+                        'rgba(255, 99, 132, 0.8)' 
+                    ], 
+                    borderWidth: 1 
+                }] 
+            }, 
             options: { 
                 responsive: true, maintainAspectRatio: false, 
                 scales: { y: { beginAtZero: true, max: 30, ticks: {font: {size: 10}} }, x: {ticks: {font: {size: 10}}} }, 
@@ -1059,7 +1085,6 @@
             if (!isNaN(val)) {
                 total += val; 
                 sectionTotals[sectionName] += val;
-                // تم تعديل التقدير ليكون نصاً كاملاً "جيد جداً"
                 if(val >= 4.5) cellRating.innerHTML = "<span class='grade-excellent'>ممتاز</span>"; 
                 else if(val >= 3.5) cellRating.innerHTML = "<span class='grade-vgood'>جيد جداً</span>"; 
                 else if(val >= 2.5) cellRating.innerHTML = "<span class='grade-good'>جيد</span>"; 
@@ -1113,6 +1138,7 @@
         document.getElementById('finalGrade').innerText = '-';
         if (chartInstance) { chartInstance.data.datasets[0].data = [0, 0, 0, 0, 0]; chartInstance.update(); }
         clearSignature();
+        clearVisitorSignature(); 
         clearInterval(timerInterval); teacherSeconds = 0; studentSeconds = 0; updateTimerDisplay();
         document.getElementById('feedbackBox').style.display = 'none';
         document.getElementById('devPlanBox').style.display = 'none';
@@ -1135,13 +1161,11 @@
             }
         });
 
-        // === تعديل جديد: إضافة التوصيات بناءً على مستوى الأداء ===
         if (totalScore >= 90) {
             weaknesses.push("• ينصح بنقل الخبرة للزملاء للإفادة");
         } else if (totalScore < 65) {
             weaknesses.push("• ينصح بتبادل زيارات وحضور حصص نموذجية");
         }
-        // ========================================================
 
         let totalTime = teacherSeconds + studentSeconds;
         let interactionText = totalTime > 0 ? `حديث المعلم: ${Math.round((teacherSeconds / totalTime) * 100)}%` : "لم يرصد الزمن";
@@ -1170,14 +1194,12 @@
         }
     }
 
-    // === دالة التحقق من الاكتمال: تضع مربع أحمر وتنتقل للحقل الفارغ ===
     function validateCompletion() {
         let inputs = document.querySelectorAll('.score-input'); 
         let isComplete = true; 
         let firstEmpty = null;
 
         inputs.forEach(input => { 
-            // التحقق إذا كانت القيمة فارغة (نص فارغ أو null)
             if (input.value === "" || input.value === null) { 
                 isComplete = false; 
                 input.classList.add('input-error'); 
@@ -1190,7 +1212,6 @@
         if (!isComplete) {
             alert("⚠️ تنبيه: يجب تعبئة جميع بنود التقييم (المربعات الحمراء) أولاً.");
             if (firstEmpty) {
-                // التمرير الآلي للحقل الناقص
                 firstEmpty.scrollIntoView({behavior: "smooth", block: "center"});
                 firstEmpty.focus();
             }
@@ -1200,21 +1221,21 @@
     }
 
     function generateReportOnly() { 
-        if (!validateCompletion()) return; // يمنع التوليد إذا ناقص
+        if (!validateCompletion()) return; 
         analyzeData(true, false); 
     }
 
     function toggleDevPlan() { 
         const box = document.getElementById('devPlanBox');
         if (box.style.display === 'none') { 
-             if (!validateCompletion()) return; // يمنع الفتح إذا ناقص
+             if (!validateCompletion()) return; 
              analyzeData(false, true); box.scrollIntoView({behavior: "smooth"}); 
         } 
         else { box.style.display = 'none'; }
     }
     
     function checkAndPrint() { 
-        if (!validateCompletion()) return; // يمنع الطباعة إذا ناقص
+        if (!validateCompletion()) return; 
         window.print(); 
     }
 
@@ -1234,6 +1255,7 @@
     }
     function formatTime(sec) { let m = Math.floor(sec/60); let s = sec%60; return (m<10?"0"+m:m) + ":" + (s<10?"0"+s:s); }
 
+    // === منطق توقيع المعلم ===
     const canvas = document.getElementById('sigCanvas'); const ctx = canvas.getContext('2d'); let drawing = false;
     function getTouchPos(canvasDom, touchEvent) { var rect = canvasDom.getBoundingClientRect(); return { x: touchEvent.touches[0].clientX - rect.left, y: touchEvent.touches[0].clientY - rect.top }; }
     canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
@@ -1243,6 +1265,18 @@
     canvas.addEventListener('touchend', (e) => { e.preventDefault(); drawing = false; });
     canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (drawing) { var pos = getTouchPos(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); } });
     function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    // === منطق توقيع الموجه الزائر ===
+    const canvasV = document.getElementById('visitorCanvas'); const ctxV = canvasV.getContext('2d'); let drawingV = false;
+    canvasV.addEventListener('mousedown', (e) => { drawingV = true; ctxV.beginPath(); ctxV.moveTo(e.offsetX, e.offsetY); });
+    canvasV.addEventListener('mouseup', () => { drawingV = false; });
+    canvasV.addEventListener('mousemove', (e) => { if (drawingV) { ctxV.lineTo(e.offsetX, e.offsetY); ctxV.stroke(); } });
+    canvasV.addEventListener('touchstart', (e) => { e.preventDefault(); drawingV = true; var pos = getTouchPos(canvasV, e); ctxV.beginPath(); ctxV.moveTo(pos.x, pos.y); });
+    canvasV.addEventListener('touchend', (e) => { e.preventDefault(); drawingV = false; });
+    canvasV.addEventListener('touchmove', (e) => { e.preventDefault(); if (drawingV) { var pos = getTouchPos(canvasV, e); ctxV.lineTo(pos.x, pos.y); ctxV.stroke(); } });
+    function clearVisitorSignature() { ctxV.clearRect(0, 0, canvasV.width, canvasV.height); }
+
 </script>
 </body>
 </html>
+
